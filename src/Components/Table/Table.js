@@ -34,6 +34,8 @@ export default function QuickFilteringGrid(props) {
         '.MuiDataGrid-cell': { fontSize:"16px" }, //tableCell
         '& .MuiDataGrid-columnHeaders': { backgroundColor: '#4daaff', color:"white", fontSize:"16px", }, //tableHeader
         '& .MuiDataGrid-columnHeaderTitle':{fontWeight:"bold"},
+        '& .MuiDataGrid-columnHeaderTitleContainer':{justifyContent:"center"},
+        "& .MuiDataGrid-cell" :{justifyContent:"center"}
       }}
         autoHeight
         disableColumnMenu

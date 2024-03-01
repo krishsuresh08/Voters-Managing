@@ -14,6 +14,11 @@ export const AdminJSON = [
         "path" : "/pdf",
         "icon" : "bi bi-filetype-pdf",
     },
+    {
+        "comp" : "Tasks",
+        "path" : "/tasks",
+        "icon" : "bi bi-book",
+    },
 ];
 
 export const EmployeeJSON = [
@@ -26,5 +31,10 @@ export const EmployeeJSON = [
         "comp" : "PDF",
         "path" : "/pdf",
         "icon" : "bi bi-filetype-pdf",
+    },
+    {
+        "comp" : "Tasks",
+        "path" : "/tasks",
+        "icon" : "bi bi-book",
     },
 ];

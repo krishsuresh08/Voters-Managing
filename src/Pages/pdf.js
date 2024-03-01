@@ -1,4 +1,4 @@
-import { Autocomplete, Card, CardContent, Grid, TextField, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Axios from '../AxiosInstance';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
@@ -20,29 +20,25 @@ export default function PDF() {
       localStorage.removeItem("pdf")
     }
     ListPDF()
-  }, []);
+  }, [location.pathname]);
 
   return (
-        <Grid container rowSpacing={2} columnGap={{sm:9, xs:1}} marginTop="35px" marginLeft="25px">
+        <Grid container rowSpacing={2} columnGap={{sm:6, xs:1}} marginTop="35px" paddingLeft="25px">
           <Grid sx={{ mb: 2 }} item xs={12}>
             <h1>Processed PDFs</h1>
           </Grid>
             {pdfList.map((val, index) => (
               <Grid item xs={12} sm={3}>
                 <Link to="/pdf_list" style={{textDecoration:"none"}} onClick={() => {
-                if (localStorage.getItem("pdf") == null ) {
-                  console.log("" == null);
-                  localStorage.setItem("pdf", val);
-                }
-              }}
-                >
-                  <Card key={index} style={{ marginBottom: '10px', cursor:"pointer" }}>
-                      {/* You can customize the CardContent and Typography as needed */}
-                      <CardContent sx={{display:"flex", justifyContent:"center"}}>
-                        <PictureAsPdfIcon sx={{color:"red"}} />
-                        <Typography sx={{ml:1}} variant="h5">{val}</Typography>                  
-                      </CardContent>
-                  </Card>
+                  if (localStorage.getItem("pdf") == null ) {
+                    localStorage.setItem("pdf", val); } }}
+                    >
+                      <Card key={index} style={{ marginBottom: '10px', borderRadius:"15px", cursor:"pointer" }}>
+                        <CardContent sx={{display:"flex", justifyContent:"center",  }}>
+                          <PictureAsPdfIcon sx={{color:"red"}} />
+                          <Typography sx={{ml:1}} variant="h5">{val}</Typography>                  
+                        </CardContent>
+                      </Card>
                 </Link>
                 </Grid>
             ))}

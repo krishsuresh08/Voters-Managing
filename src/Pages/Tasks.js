@@ -6,31 +6,22 @@ import {DeleteOutlineOutlined, VisibilityOutlined, EditOutlined} from '@mui/icon
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Axios from '../AxiosInstance';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 
-export default function Employee() {
+export default function Tasks() {
 
     const [rows, setRows] = useState([]);
-    const navigate = useNavigate();
 
     // List
-    const ListEmp = ()=>{
-        Axios.get('employee_details/get_all_emp_data').then((res) => {
+    const ListTasks = ()=>{
+        Axios.get('filter_details/get_task_details').then((res) => {
             if(res.data.status === "success"){
                 setRows([...res.data.data]);
             }
         });
     };
 
-    const onTaskClick = (id, name) =>{
-        localStorage.setItem("clicked_emp_id",id );
-        localStorage.setItem("clicked_emp_name", name)
-        navigate("/employee/task")
-    };
-
-    // Delete row
-    
-    const handleRowDelete = (EmployeeID)=>{
+    // Delete row 
+    const handleRowDelete = (TaskID)=>{
         Swal.fire({
             title:"Are you Sure ?",
             text:"You want to delete it?",
@@ -42,11 +33,16 @@ export default function Employee() {
         }).then((result) => {
             if(result.isConfirmed){
                 // delete api
-                Axios.delete(`employee_details/delete_emp?emp_id=`+ EmployeeID).then((res)=>{
+                Axios.delete(`task/delete_task?task_id=`+ TaskID).then((res)=>{
                     if (res.data.status === "success"){
-                        ListEmp()
+                        ListTasks()
                     }
-                })
+                }).catch(err =>{
+                    Swal.fire({
+                        icon:"error",
+                        title: err
+                    })
+                }) 
                 Swal.fire({
                     title:"Deleted",
                     text :"The data deleted successfully",
@@ -63,15 +59,13 @@ export default function Employee() {
                 })
             }
         })
-
     };
-
     // table column
 
     const columns = [
         {
             field: "name",
-            headerName: "Employee Name",
+            headerName: "Assigned to",
             width: 150,
             editable: false,
             headerAlign: "left", 
@@ -79,8 +73,8 @@ export default function Employee() {
             sortable:false
         },
         {
-            field: "email",
-            headerName: "email",
+            field: "description",
+            headerName: "Description",
             width: 300,
             editable: false,
             headerAlign: "left", 
@@ -88,8 +82,26 @@ export default function Employee() {
             sortable:false
         },
         {
-            field: "phone_number",
-            headerName: "Phone Number",
+            field: "pdf_name",
+            headerName: "PDF",
+            width: 100,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "priority",
+            headerName: "Priority",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "due_date",
+            headerName: "Due Date",
             width: 150,
             editable: false,
             headerAlign: "left", 
@@ -107,9 +119,8 @@ export default function Employee() {
             renderCell: (params) => {
                 return (
                     <Stack direction="row" spacing={1}>
-                        <Link to={`/employee/action/:update`}><IconButton disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link>
-                        <IconButton disableRipple onClick={()=>{handleRowDelete(params.row.emp_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton>
-                        <IconButton onClick={() => onTaskClick(params.row.emp_id, params.row.name)} disableRipple sx={{p:0,}}><AssignmentIcon/></IconButton>
+                        <Link to={`/employee/task/action/update/${params.row.task_id}`}> <IconButton disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link>
+                        <IconButton disableRipple onClick={()=>{handleRowDelete(params.row.task_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton>
                     </Stack>
                 )
             },
@@ -117,7 +128,11 @@ export default function Employee() {
     ];
 
     useEffect(() => {
-        ListEmp()
+        ListTasks()
+        if(localStorage.getItem("clicked_emp_id") !== null) {
+            localStorage.removeItem("clicked_emp_id")
+            localStorage.removeItem("clicked_emp_name")
+        } 
     }, []);
 
 
@@ -125,10 +140,9 @@ export default function Employee() {
         <div>
             <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", marginTop:"35px", borderRadius: "20px"}}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <h1 style={{ fontWeight: "bold", color:"black !Important"  }}>Employees</h1>
-                    <Link to='/employee/create' underline="none"> <Button style={{ backgroundColor: "#4daaff" }} disableRipple disableElevation variant='contained'>Add New</Button></Link>
+                    <h1 style={{ fontWeight: "bold", color:"black !Important"  }}>Assigned Tasks</h1>
                 </Box>
-                <StyledDataGrid columns={columns} rows={rows} id='emp_id' />
+                <StyledDataGrid columns={columns} rows={rows} id='task_id' />
             </div>
         </div>
     )
