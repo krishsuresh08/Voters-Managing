@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useEffect } from 'react';
-import Layout from './Components/Layout/Layout.js';
+import Layout from './Components/Layout/Layout.js'; 
 import "../src/Assets/CSS/style.css";
 import { useLocation } from 'react-router-dom';
 

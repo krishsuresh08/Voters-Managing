@@ -11,6 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapse, Drawer } from '@mui/material';
+import Logo from "../../Assets/Images/Logo/download-.png";
 import { AdminJSON, EmployeeJSON } from '../../Assets/JSON/sideBarJSON';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -41,9 +42,11 @@ export default function MiniDrawer({ open, setOpen }) {
             <Drawer sx={{ width: "inherit", display: { xs: 'block', md: 'none' }, flexShrink: 0, '& .MuiDrawer-paper': { width: "inherit", zIndex: 9999999999, boxSizing: 'border-box', backgroundColor: "#6FA8DC" }, }}
                 variant="temporary" anchor="left" onClose={() => setOpen(false)} open={open}>
                 <DrawerHeader>
-                    <Toolbar sx={{ color: "#FFF", textAlign: "center", cursor: "pointer" }}>
-                        <Link to="/" style={{ color: "inherit", textDecoration: "none" }}></Link>
-                    </Toolbar>
+                    <Link to="/dashboard" style={{ color: "inherit", textDecoration: "none" }}>
+                        <Toolbar sx={{ backgroundImage: `url${Logo}`, color: "#FFF", textAlign: "center", width:"100%", }}>
+                            <img alt='Logo' src={Logo} />        
+                        </Toolbar>
+                    </Link>
                     <IconButton sx={{ backgroundColor: "#FFF", p: "3px 5px" }} onClick={handleDrawerClose}>
                         <i className="bi bi-x"></i>
                     </IconButton>
@@ -87,9 +90,11 @@ export default function MiniDrawer({ open, setOpen }) {
             {/* permanent drawer */}
             <Drawer variant="permanent" sx={{ display: { xs: 'none', sm: 'block' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: { md: "23.4%", lg: "16.7%" }, position: "fixed", backgroundColor: "#6FA8DC", overflow: "hidden" }, }} open={true} >
                 <DrawerHeader>
-                <Toolbar sx={{ color: "#FFF", textAlign: "center", cursor: "pointer" }}>
-                    <Link to="/" style={{ color: "inherit", textDecoration: "none" }}></Link>
-                </Toolbar>
+                    <Link to="/dashboard" style={{ color: "inherit", textDecoration: "none" }}>
+                        <Toolbar sx={{ backgroundImage: `url${Logo}`, color: "#FFF", textAlign: "center", width:"100%" }}>
+                            <img alt='Logo' src={Logo} />        
+                        </Toolbar>
+                    </Link>
                 </DrawerHeader>
                 <Divider sx={{ "backgroundColor": "#FFF" }} />
                 <List sx={{ padding: "10px" }}>

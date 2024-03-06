@@ -1,24 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, IconButton } from '@mui/material';
+import { Box, Stack, IconButton, Tooltip } from '@mui/material';
 import StyledDataGrid from '../Components/Table/Table';
 import { Link } from 'react-router-dom';
-import {DeleteOutlineOutlined, VisibilityOutlined, EditOutlined} from '@mui/icons-material';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import {DeleteOutlineOutlined, EditOutlined} from '@mui/icons-material';
 import Axios from '../AxiosInstance';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default function Tasks() {
 
     const [rows, setRows] = useState([]);
 
-    // List
+    function formatDate(value) {
+        if (!value) return "";
+        return moment(value).format('DD-MM-YYYY');
+    };
+
+    // List All
     const ListTasks = ()=>{
         Axios.get('filter_details/get_task_details').then((res) => {
             if(res.data.status === "success"){
                 setRows([...res.data.data]);
             }
-        });
+        }).catch(err => {
+        Swal.fire({
+          title:err,
+          icon:"error",
+        })
+      });
     };
+
+    // Employee Task
+    const EmpTasks = () =>{
+        Axios.get("task/assigned_tasks?emp_id="+localStorage.getItem("EmpID")).then(res =>{
+            if(res.data.status === "success"){
+                console.log(res);
+                setRows([...res.data.data]);
+            }
+        }).catch(err =>{
+            Swal.fire({
+                title:err,
+                icon:"error"
+            })
+        })
+    }
 
     // Delete row 
     const handleRowDelete = (TaskID)=>{
@@ -35,24 +60,20 @@ export default function Tasks() {
                 // delete api
                 Axios.delete(`task/delete_task?task_id=`+ TaskID).then((res)=>{
                     if (res.data.status === "success"){
+                        Swal.fire({
+                            title :res.data.message,
+                            icon:"success"
+                        })
                         ListTasks()
-                    }
-                }).catch(err =>{
-                    Swal.fire({
-                        icon:"error",
-                        title: err
-                    })
-                }) 
-                Swal.fire({
-                    title:"Deleted",
-                    text :"The data deleted successfully",
-                    icon:"success"
-                })
+                    }}).catch(err =>{
+                        Swal.fire({
+                            icon:"error",
+                            title: err
+                        }) }) 
             }
             else if(result.dismiss){
                 Swal.fire({
-                    title:"Cancelled",
-                    text :"The data is not deleted",
+                    title :"The data is not deleted",
                     icon:"info",
                     showConfirmButton:false,
                     timer: 1500
@@ -60,8 +81,8 @@ export default function Tasks() {
             }
         })
     };
-    // table column
 
+    // table column
     const columns = [
         {
             field: "name",
@@ -100,13 +121,26 @@ export default function Tasks() {
             sortable:false
         },
         {
+            field: "status",
+            headerName: "Status",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false,
+        },
+        {
             field: "due_date",
             headerName: "Due Date",
             width: 150,
             editable: false,
             headerAlign: "left", 
             align: "left",
-            sortable:false
+            sortable:false,
+            valueFormatter: (params) => {
+                const valueFormatted = formatDate(params.value);
+                return valueFormatted;
+            }
         },
         {
             field: "none",
@@ -119,8 +153,8 @@ export default function Tasks() {
             renderCell: (params) => {
                 return (
                     <Stack direction="row" spacing={1}>
-                        <Link to={`/employee/task/action/update/${params.row.task_id}`}> <IconButton disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link>
-                        <IconButton disableRipple onClick={()=>{handleRowDelete(params.row.task_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton>
+                        <Tooltip title="Edit"><Link to={`/employee/task/update/${params.row.task_id}`}> <IconButton disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link></Tooltip>
+                        <Tooltip title="Delete"><IconButton disableRipple onClick={()=>{handleRowDelete(params.row.task_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton></Tooltip>
                     </Stack>
                 )
             },
@@ -128,12 +162,20 @@ export default function Tasks() {
     ];
 
     useEffect(() => {
-        ListTasks()
-        if(localStorage.getItem("clicked_emp_id") !== null) {
-            localStorage.removeItem("clicked_emp_id")
-            localStorage.removeItem("clicked_emp_name")
-        } 
+        const role = localStorage.getItem("Role");
+
+        if (role === "admin") {
+            ListTasks();
+        } else if (role === "Employee") {
+            EmpTasks();
+        }
+
+        if (localStorage.getItem("clicked_emp_id") !== null) {
+            localStorage.removeItem("clicked_emp_id");
+            localStorage.removeItem("clicked_emp_name");
+        }
     }, []);
+
 
 
     return (

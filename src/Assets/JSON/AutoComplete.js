@@ -1,0 +1,30 @@
+export const tamilNaduData = [
+    { 
+        name: 'காஞ்சிபுரம்', 
+        assembly: ['Assembly 1', 'Assembly 2', 'Assembly 3'] 
+    },
+    { name: 'தென்காசி', assembly: ['ஆலங்குளம்', 'Assembly 5', 'Assembly 6'] },
+    { name: 'கோவை', assembly: ['காங்காயம்', 'மேட்டுபாலயம்', 'பர்ப்பலயம்'] },
+    { name: 'டுத்துக்குடி', assembly: ['Assembly 7', 'Assembly 8', 'Assembly 9'] },
+    { name: 'விளையாட்டுப் பாதை', assembly: ['Assembly 10', 'Assembly 11', 'Assembly 12'] },
+    { name: 'நெல்லை', assembly: ['Assembly 13', 'Assembly 14', 'Assembly 15'] },
+    { name: 'மதுரை', assembly: ['Assembly 16', 'Assembly 17', 'Assembly 18'] },
+    { name: 'புதுக்கோட்டை', assembly: ['Assembly 19', 'Assembly 20', 'Assembly 21'] },
+    { name: 'கடலூர்', assembly: ['Assembly 22', 'Assembly 23', 'Assembly 24'] },
+    { name: 'திருப்பூர்', assembly: ['Assembly 25', 'Assembly 26', 'Assembly 27'] },
+    { name: 'மண்டியூர்', assembly: ['Assembly 28', 'Assembly 29', 'Assembly 30'] },
+    { name: 'சிவகங்கை', assembly: ['Assembly 31', 'Assembly 32', 'Assembly 33'] },
+    { name: 'அரியலூர்', assembly: ['Assembly 34', 'Assembly 35', 'Assembly 36'] },
+    { name: 'காரூர்', assembly: ['Assembly 37', 'Assembly 38', 'Assembly 39'] },
+    { name: 'திருச்சி', assembly: ['Assembly 40', 'Assembly 41', 'Assembly 42'] },
+    { name: 'திருச்சுரூர்', assembly: ['Assembly 43', 'Assembly 44', 'Assembly 45'] },
+    { name: 'திருவள்ளூர்', assembly: ['Assembly 46', 'Assembly 47', 'Assembly 48'] },
+    { name: 'நாகப்பட்டினம்', assembly: ['Assembly 49', 'Assembly 50', 'Assembly 51'] },
+    { name: 'வேலூர்', assembly: ['Assembly 52', 'Assembly 53', 'Assembly 54'] },
+    { name: 'பெரம்பலூர்', assembly: ['Assembly 55', 'Assembly 56', 'Assembly 57'] },
+    { name: 'விழுப்புரம்', assembly: ['Assembly 58', 'Assembly 59', 'Assembly 60'] },
+    { name: 'கன்னியாகுமரி', assembly: ['Assembly 61', 'Assembly 62', 'Assembly 63'] },
+    { name: 'நாகைக்கோயில்', assembly: ['Assembly 64', 'Assembly 65', 'Assembly 66'] },
+    { name: 'தேனி', assembly: ['Assembly 67', 'Assembly 68', 'Assembly 69'] },
+    { name: 'ராமநாதபுரம்', assembly: ['Assembly 70', 'Assembly 71', 'Assembly 72'] }
+]

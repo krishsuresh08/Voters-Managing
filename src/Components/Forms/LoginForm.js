@@ -3,6 +3,7 @@ import { VisibilityOutlined, VisibilityOffOutlined} from '@mui/icons-material';
 import React, { useEffect, useState} from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import Axios from "../../AxiosInstance";
+import BackgroundImage from "../../Assets/Images/Login/login2.jpg";
 import Swal from 'sweetalert2';
 
 export default function LoginForm() {
@@ -56,6 +57,7 @@ export default function LoginForm() {
               localStorage.setItem("Name", res.data.name);
               localStorage.setItem("Role", res.data.role);
               localStorage.setItem("Token", res.data.access_token);
+              localStorage.setItem("EmpID", res.data.emp_id);
               navigate('/dashboard')
             }
             else if(res.data.detail == "Password must be at least 8 characters long") {
@@ -110,8 +112,8 @@ export default function LoginForm() {
 
   return (
     <div>
-      <Grid container sx={{backgroundColor:"#d9ead3", p:3, display :"flex", justifyContent:"center",alignItems:"center", height:"100vh" }}>
-        <Grid item xs={12} md={6} sx={{backgroundColor:"white", borderRadius:"20px", p:3}} >
+      <Grid container sx={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', p:3, display :"flex", justifyContent:"center",alignItems:"center", height:"100vh" }}>
+        <Grid item xs={12} md={6} sx={{background:"white",borderRadius:"20px", p:3}} >
           <Box>
             <Typography variant='h3' sx={{fontWeight:"bold", pb:2}}>Login</Typography>
             <Box sx={{pt:3}} >
@@ -126,7 +128,7 @@ export default function LoginForm() {
                   {loading ? (
                       <CircularProgress />
                   ) : (
-                      <Button fullWidth disableElevation disableRipple size='large' style={{ marginRight: "10px", backgroundColor: "#0b5394", marginTop: "15px" }} variant='contained' onClick={handleSubmit}>Login</Button>
+                      <Button fullWidth disableElevation disableRipple size='large' style={{ marginRight: "10px", backgroundColor: "#4dafff", marginTop: "15px" }} variant='contained' onClick={handleSubmit}>Login</Button>
                   )}
               </Box>
           </Box>
@@ -135,3 +137,5 @@ export default function LoginForm() {
     </div>
   ) 
 };
+// background: `url(${BackgroundImage})`, backgroundPosition:"center", backgroundSize:"cover",
+// background: 'linear-gradient(to right, #F0F8FF, #89CFF0)'

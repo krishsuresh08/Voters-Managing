@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, IconButton, Tooltip } from '@mui/material';
+import { Box, Button, Stack, IconButton, Tooltip, Menu, MenuItem } from '@mui/material';
 import StyledDataGrid from '../Components/Table/Table';
 import { Link, useNavigate } from 'react-router-dom';
-import {DeleteOutlineOutlined, VisibilityOutlined, EditOutlined} from '@mui/icons-material'
+import { EditOutlined} from '@mui/icons-material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Axios from '../AxiosInstance';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default function SeperatePDF() {
 
     const [rows, setRows] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
     let pdfNum = localStorage.getItem("pdf");
 
+    function formatDate(value) {
+        if (!value) return "";
+        return moment(value).format('DD-MM-YYYY');
+    };
     // list
-
     const ListPDF = ()=>{
         Axios.get('filter_details/all_pdf_data/?pdf_name=' + pdfNum).then((res) => {
-            setRows([...res.data.data_from_db]);
+            setRows([...res.data]);
         }).catch(err =>{
             Swal.fire({
                 title: err,
@@ -27,13 +33,62 @@ export default function SeperatePDF() {
     };
 
     // on Edit Button Click
-
     const onEditClick = (params)=>{
         localStorage.setItem("clicked_pdf", params.row.serial_no)
     }
 
-    // Delete row
+    // Export
+    const handleExportClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const onExportClick = async () => {
+        try {
+        const response = await Axios.get('filter_details/export?pdf_name='+localStorage.getItem("pdf"), {
+            responseType: 'blob', // Set response type to blob
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'export.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        handleClose()
+        } catch (error) {
+            Swal.fire({
+                title:error,
+                icon:"error"
+            })
+        }
+    };
     
+    const onExportCompleted = async () => {
+        try {
+            const pdfName = localStorage.getItem("pdf")
+            const response = await Axios.get(`filter_details/export?pdf_name=${pdfName}&status=completed`, 
+        {
+            responseType: 'blob', // Set response type to blob
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'export.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        handleClose()
+        } catch (error) {
+            Swal.fire({
+                title:error,
+                icon:"error"
+            })
+        }
+    };
+
+    // Delete row 
     const handleRowDelete = (PDFID)=>{
         Swal.fire({
             title:"Are you Sure ?",
@@ -73,6 +128,33 @@ export default function SeperatePDF() {
     // table column
     const columns = [
         {
+            field: "serial_no",
+            headerName: "Num",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "pdf_name",
+            headerName: "PDF Name",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "voter_id",
+            headerName: "Voter ID",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
             field: "name",
             headerName: "Name",
             width: 200,
@@ -100,27 +182,27 @@ export default function SeperatePDF() {
             sortable:false
         },
         {
-            field: "voter_id",
-            headerName: "Voter ID",
-            width: 150,
-            editable: false,
-            headerAlign: "left", 
-            align: "left",
-            sortable:false
-        },
-        {
-            field: "PDF Name",
-            headerName: "PDF Name",
-            width: 150,
-            editable: false,
-            headerAlign: "left", 
-            align: "left",
-            sortable:false
-        },
-        {
-            field: "text_data",
-            headerName: "Text",
+            field: "relation_name",
+            headerName: "Relation Name",
             width: 200,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "relation",
+            headerName: "Relation Type",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false
+        },
+        {
+            field: "house_no",
+            headerName: "Door No.",
+            width: 150,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -129,7 +211,7 @@ export default function SeperatePDF() {
         {
             field: "status",
             headerName: "Status",
-            width: 200,
+            width: 150,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -157,7 +239,33 @@ export default function SeperatePDF() {
             editable: false,
             headerAlign: "left", 
             align: "left",
-            sortable:false
+            sortable:false,
+            valueFormatter: (params) => {
+                const valueFormatted = formatDate(params.value);
+                return valueFormatted;
+            }
+        },
+        {
+            field: "modified_on",
+            headerName: "Modified Date",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false,
+            valueFormatter: (params) => {
+                const valueFormatted = formatDate(params.value);
+                return valueFormatted;
+            }
+        },
+        {
+            field: "modified_by",
+            headerName: "Modified by",
+            width: 150,
+            editable: false,
+            headerAlign: "left", 
+            align: "left",
+            sortable:false,
         },
         {
             field: "none",
@@ -171,7 +279,7 @@ export default function SeperatePDF() {
                 return (
                     <Stack direction="row" spacing={2}>
                         <Tooltip title="Edit"> <Link to={`/pdf/update`}> <IconButton onClick={()=> onEditClick(params)} disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link></Tooltip>
-                        <Tooltip title="Delete"><IconButton disableRipple onClick={()=>{handleRowDelete(params.row.emp_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton></Tooltip>
+                        {/* <Tooltip title="Delete"><IconButton disableRipple onClick={()=>{handleRowDelete(params.row.emp_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton></Tooltip> */}
                     </Stack>
                 )
             },
@@ -198,9 +306,16 @@ export default function SeperatePDF() {
             <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", borderRadius: "20px" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                     <h1 style={{ fontWeight: "bold", color:"black"  }}>PDF</h1>
-                    <Link to='/pdf' underline="none"> <Button style={{ backgroundColor: "#4daaff" }} disableRipple disableElevation variant='contained'>Back</Button></Link>
+                    <div style={{display:"flex"}}>
+                    <Button variant='contained' endIcon={<ArrowDropDownIcon />} onClick={handleExportClick}>Export</Button>
+                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                        <MenuItem onClick={onExportClick}>Export All</MenuItem>
+                        <MenuItem onClick={onExportCompleted}>Export Completed</MenuItem>
+                    </Menu>
+                    <Link to='/pdf' underline="none"> <Button style={{ backgroundColor: "#4daaff", marginLeft:"10px" }} disableRipple disableElevation variant='contained'>Back</Button></Link>
+                    </div>
                 </Box>
-                <StyledDataGrid columns={columns} rows={rows} id='_id' />
+                <StyledDataGrid columns={columns} rows={rows} filter={true} id='_id' />
             </div>
         </div>
     )

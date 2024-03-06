@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Axios from '../../AxiosInstance';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default function TasksForm() {
 
@@ -28,15 +29,13 @@ export default function TasksForm() {
     const navigate = useNavigate();
     const params = useParams();
     const postData = {
-        task_id:"", employee_id:empid, name: empName, description: task, priority, status: status, pdf_name: pdf, due_date:new Date(due), created_on: Date.now(), created_by: localStorage.getItem("Name"), modified_by:"", modified_on: Date.now()
+        task_id:"", emp_id:empid, name: empName, description: task, priority, status: status, pdf_name: pdf, due_date:new Date(due), created_on: Date.now(), created_by: localStorage.getItem("Name"), modified_by:"", modified_on: Date.now()
     };
     const updatedata = {
-        task_id: "", employee_id:empid, name: empName, description: task, priority, status: status, pdf_name: pdf, due_date:new Date(due), created_on: Date.now(), modified_on: Date.now(), modified_by: localStorage.getItem("Name"), created_by: created_by
+        task_id: "", emp_id:empid, name: empName, description: task, priority, status: status, pdf_name: pdf, due_date:new Date(due), created_on: Date.now(), modified_on: Date.now(), modified_by: localStorage.getItem("Name"), created_by: created_by
     };
-    console.log(typeof(pdf));
 
     // APIs
-
     const post = () =>{
         Axios.post("task/assign_task", postData).then((res)=>{
             if(res.data.status == "success"){
@@ -48,11 +47,15 @@ export default function TasksForm() {
                 timer: 1600
               })
             })
-          };
+    };
 
     const update = ()=>{
       Axios.patch("task/update_task?task_id="+params.ID, updatedata).then(res =>{
         if(res.statusText == "OK"){
+          Swal.fire({
+            title:res.data.message,
+            icon:"success"
+          })
           navigate("/tasks")
         }
       }).catch(err =>{
@@ -68,12 +71,11 @@ export default function TasksForm() {
         if(res.statusText == "OK"){
           setTask(res.data.data.description ? res.data.data.description : "") 
           setTaskid(res.data.data.taskid ? res.data.data.taskid : "") 
-          setEmpid(res.data.data.employee_id ? res.data.data.employee_id : "") 
+          setEmpid(res.data.data.emp_id ? res.data.data.emp_id : "") 
           setEmpName(res.data.data.name ? res.data.data.name : "") 
           setPriority(res.data.data.priority ? res.data.data.priority : "") 
           setPDF(res.data.data.pdf_name ? res.data.data.pdf_name : "")
-          console.log(res.data.data.pdf_name);
-          setDue(res.data.data.due_date ? res.data.data.due_date : " ")
+          setDue(res.data.data.due_date ? moment(res.data.data.due_date).format("YYYY-MM-DD") : " ")
           setStatus(res.data.data.status ? res.data.data.status : "")
           setcreated_on(res.data.data.created_on ? res.data.data.created_on : "")
           setcreated_by(res.data.data.created_by ? res.data.data.created_by : "")
@@ -87,9 +89,25 @@ export default function TasksForm() {
       })
     }
 
+    // const ListPDF = () => {
+    //     Axios.get('filter_details/list_pdf').then((res) => {
+    //       setPDF([...res.data.collections]);
+    //     }).catch(err => {
+    //       Swal.fire({
+    //         title:err,
+    //         icon:"error",
+    //       })
+    //     });
+    // };
+
     // onclick Functions
     const onCancelClick = () =>{
+      if(params.action == "create") {
         navigate("/employee")
+      }
+      else if(params.action == "update" ){
+         navigate("/tasks")
+      }
     };
 
   const onSubmitClick = () =>{
@@ -97,27 +115,30 @@ export default function TasksForm() {
       desc : task.trim() === "" ? true : false,
       pdf : pdf === "" ? true : false,
       priority : priority.trim() === "" ? true : false,
-      date : due.trim() === " " ? true : false,
-      status : status.trim() === " " ? true : false,
+      date : due.trim() == ""|| due == null ?  true : false,
+      status : status.trim() === "" ? true : false,
     }
     setError(FormError)
-    if (Object.values(Error).some(val => val === true)){
+    if (Object.values(FormError).some(val => val === true)){
+      console.log(FormError);
     }
     else{
-      params.action == "update" ? 
-      update()
-      :
-      console.log("else");
-      post()
+      if(params.action == "update" ) {
+        update()
+      }
+      else if(params.action == "create" ){
+        post() 
+      } 
     }
   };
 
     useEffect(() =>{
-        setEmpid(localStorage.getItem("clicked_emp_id")) 
-        setEmpName(localStorage.getItem("clicked_emp_name")) 
-        if(params.action == "update"){
-          view()
-        }
+      // ListPDF()
+      setEmpid(localStorage.getItem("clicked_emp_id")) 
+      setEmpName(localStorage.getItem("clicked_emp_name")) 
+      if(params.action == "update"){
+        view()
+      }
     }, [])
 
   return (
@@ -129,21 +150,40 @@ export default function TasksForm() {
         <Grid item sm={6} xs={12}>
           <TextField type='text' label="Task Description" size='small' value={task} error={Error.desc} helperText={Error.desc ? "Field is necessary" : ""} onChange={(e => setTask(e.target.value))} fullWidth  />
         </Grid>
+  {/* <Grid item xs={12} sm={6}>
+    <Autocomplete
+      fullWidth
+      options={pdf} // Assuming pdf is an array of options fetched from the database
+      value={selectedPDF} // You need to maintain a state for the selected PDF
+      onChange={(event, newValue) => setSelectedPDF(newValue)} // Update the selected PDF
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="PDF Name"
+          size="small"
+          error={Error.pdf}
+          helperText={Error.pdf ? "Field is necessary" : ""}
+        />
+      )}
+    />
+  </Grid> */}
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="PDF Name" size='small' fullWidth value={pdf} error={Error.pdf} helperText={Error.pdf ? "Field is necessary" : ""} onChange={(e => setPDF(e.target.value))} />
+          <TextField type='text' label="PDF Name" size='small' fullWidth value={pdf} error={Error.pdf} helperText={Error.pdf ? "Field is necessary" : ""} onChange={(e => setPDF(e.target.value.split(",")))} />
         </Grid>
         <Grid item sm={6} xs={12}>
           <TextField type='text' label="Priority" size='small' fullWidth value={priority} error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Status" size='small' fullWidth value={status} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))} />
+          <TextField type='text' label="Status" size='small' placeholder='completed / progress' fullWidth value={status} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
-            <TextField inputProps={{ max:"2024-12-31"}} type='date' label='Due Date' size='small' fullWidth value={due} error={Error.due} helperText={Error.due ? "Field is necessary" : ""} onChange={(e => setDue(e.target.value))} />
+            <TextField inputProps={{ max:"2024-12-31"}} type='date' label='Due Date' size='small' fullWidth value={due} error={Error.date} helperText={Error.date ? "Field is necessary" : ""} onChange={(e => setDue(e.target.value))} />
         </Grid>
       </Grid>
         <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Submit</Button>
+          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>
+            {params.action == "create" ? "Create" :params.action == "update" ? "Update" :"" }
+            </Button>
           <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
         </Box>
     </div>

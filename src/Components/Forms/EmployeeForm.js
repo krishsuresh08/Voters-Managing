@@ -1,8 +1,9 @@
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import { Box, Button, Grid, IconButton, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Axios from '../../AxiosInstance';
 import { useNavigate,useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export default function EmployeeForm() {
 
@@ -13,6 +14,7 @@ export default function EmployeeForm() {
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [ShowPassword, setShowPassword] = useState("");
   const [ShowConfirm, setShowConfirm] = useState("");
+  const [disable, setDisable] = useState(false);
 
   const [Error, setError] = useState({
     name : false,
@@ -24,16 +26,11 @@ export default function EmployeeForm() {
   const navigate = useNavigate();
   const params = useParams();
 
-  const PostData = {
-    emp_id:"", name: EmployeeName, email: Email, phone_number : PhoneNumber, password: Password, created_by: localStorage.getItem("Name"),role:"", created_at: Date.now(), modified_on: Date.now()
-  };
-
   const phoneregex = /^\d{10}$/;
   const passregex = /^.{8,}$/;
   const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // APIs
-
   const post = () =>{
       Axios.post("employee_details/add_emp", PostData).then((res)=>{
         console.log(res);
@@ -41,12 +38,54 @@ export default function EmployeeForm() {
             navigate("/employee")
         }
       }).catch(err =>{
-        alert(err)
+        Swal.fire({
+          title:err,
+          icon:"error",
+
+        })
       })
   };
 
-  // Submit Action
+  const view = () =>{
+    Axios.get("employee_details/emp_details?emp_id="+params.ID).then(res =>{
+      setEmployeeName(res.data.data.name ? res.data.data.name : "") 
+      setPassword(res.data.data.password ? res.data.data.password : "")
+      setConfirmPassword(res.data.data.password ? res.data.data.password : "")
+      setEmail(res.data.data.email ? res.data.data.email : "") 
+      setPhoneNumber(res.data.data.phone_number ? res.data.data.phone_number : "") 
+    }).catch(err =>{
+      Swal.fire({
+        title: err,
+        icon:"error"
+      })
+    })
+  }
 
+  const update = () =>{
+    Axios.patch("employee_details/update_employee", UpdateData).then(res =>{
+      if(res.statusText == "OK"){
+        Swal.fire({
+          title:"Updated Successfully",
+          icon:"success"
+        })
+        navigate("/employee")
+      }
+    }).catch(err =>{
+      Swal.fire({
+        title: err,
+        icon:"error",
+      })
+    })
+  }
+  const PostData = {
+    emp_id:"", name: EmployeeName, email: Email, phone_number : PhoneNumber, password: Password, created_by: localStorage.getItem("Name"),role:"", created_at: Date.now(), modified_on: Date.now()
+  };
+
+  const UpdateData = {
+    emp_id:"", name: EmployeeName, email: Email, phone_number : PhoneNumber, password: Password, created_by: "",role:"", created_at: Date.now(), modified_on: Date.now()
+  };
+
+  // Onclick Functions
   const onSubmitClick = () =>{
     const FormError = {
       name : EmployeeName.trim() === "" ? true : false,
@@ -56,14 +95,17 @@ export default function EmployeeForm() {
       confirm : ConfirmPassword.trim() === "" ? true : (ConfirmPassword != Password) ? "wrong" : false
     }
     setError(FormError)
-    if (Object.values(Error).some(val => val === true || val === "wrong")){
+    if (Object.values(FormError).some(val => val === true || val === "wrong")){
     }
     else{
-      post()
+      if(params.action == "update" ) {
+        update()
+      }
+      else if(params.action == "create" ){
+        post()
+      }  
     }
   };
-
-  // Onclick Functions
 
   const onBackClick = () =>{
     navigate("/employee")
@@ -76,6 +118,13 @@ export default function EmployeeForm() {
     setShowConfirm(!ShowConfirm)
   };
 
+  useEffect(() =>{
+    if(params.action == "update"){
+      view()
+      setDisable(true)
+    }
+  }, [])
+
   return (
     <div style={{ height:"100vh"}}>
       <Grid container sx={{p:2,mt:5 } } rowGap={3} columnGap={5} paddingLeft={5} paddingTop={3} justifyContent="center">
@@ -83,23 +132,25 @@ export default function EmployeeForm() {
           <h1>Employee Form</h1>
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Employee Name" error={Error.name} helperText={Error.name === "wrong" ? "Name should have" :Error.name ? "Employee Name cannot be empty" :  ""} value={EmployeeName} size='small' fullWidth onChange={(e)=>setEmployeeName(e.target.value)} />
+          <TextField type='text' label="Employee Name" error={Error.name} helperText={Error.name === "wrong" ? "Name should have" :Error.name ? "Employee Name cannot be empty" :  ""} value={EmployeeName} size='small' fullWidth onChange={(e => setEmployeeName(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type={ShowPassword ? "text" : "password"} label="Password" error={Error.pass} helperText={Error.pass === "wrong" ? "Password should have 8 characters" : Error.pass ? "Password cannot be empty" : ""} value={Password} size='small' fullWidth onChange={(e)=>setPassword(e.target.value)} InputProps={{endAdornment: ( <IconButton disableRipple onClick={handleTogglePassword}> {ShowPassword ? <VisibilityOutlined /> : <VisibilityOffOutlined />} </IconButton> ) }} />
+          <TextField disabled={disable} type={ShowPassword ? "text" : "password"} label="Password" error={Error.pass} helperText={Error.pass === "wrong" ? "Password should have 8 characters" : Error.pass ? "Password cannot be empty" : ""} value={Password} size='small' fullWidth onChange={(e)=>setPassword(e.target.value)} InputProps={{endAdornment: ( <IconButton disableRipple onClick={handleTogglePassword}> {ShowPassword ? <VisibilityOutlined /> : <VisibilityOffOutlined />} </IconButton> ) }} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type={ShowConfirm ? "text" : "password"} label="Confirm Password" error={Error.confirm} helperText={Error.confirm === "wrong" ? "Confirm Password should be same as Password" : Error.confirm ? "Confirm Password cannot be empty" : ""} value={ConfirmPassword} size='small' fullWidth onChange={(e)=>setConfirmPassword(e.target.value)} InputProps={{endAdornment: ( <IconButton disableRipple onClick={handleToggleShowPassword}> {ShowPassword ? <VisibilityOutlined /> : <VisibilityOffOutlined />} </IconButton> )}} />
+          <TextField disabled={disable} type={ShowConfirm ? "text" : "password"} label="Confirm Password" error={Error.confirm} helperText={Error.confirm === "wrong" ? "Confirm Password should be same as Password" : Error.confirm ? "Confirm Password cannot be empty" : ""} value={ConfirmPassword} size='small' fullWidth onChange={(e)=>setConfirmPassword(e.target.value)} InputProps={{endAdornment: ( <IconButton disableRipple onClick={handleToggleShowPassword}> {ShowPassword ? <VisibilityOutlined /> : <VisibilityOffOutlined />} </IconButton> )}} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Email" error={Error.email} helperText={Error.email === "wrong" ? "Entered email is not a valid email"  :Error.email ? "Email field cannot be empty" :  ""} value={Email} size='small' fullWidth onChange={(e)=>setEmail(e.target.value)} />
+          <TextField type='text' disabled={disable} label="Email" error={Error.email} helperText={Error.email === "wrong" ? "Entered email is not a valid email"  :Error.email ? "Email field cannot be empty" :  ""} value={Email} size='small' fullWidth onChange={(e)=>setEmail(e.target.value)} />
         </Grid>
         <Grid item sm={6} xs={12}>
           <TextField type='text' label="Phone Number" error={Error.phone} helperText={Error.phone === "wrong" ? "Enter a vaild Phone Number"  :Error.phone ? "Phone Number field cannot be empty" :  ""} value={PhoneNumber} size='small' fullWidth onChange={(e)=>setPhoneNumber(e.target.value)} />
         </Grid>
       </Grid>
         <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Submit</Button>
+          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>
+            {params.action == "create" ? "Create" :params.action == "update" ? "Update" :"" } 
+          </Button>
           <Button variant='contained' disableRipple disableElevation onClick={onBackClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
         </Box>
     </div>

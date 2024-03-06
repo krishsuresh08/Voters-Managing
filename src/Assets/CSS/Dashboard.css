@@ -1,0 +1,20 @@
+.dashboardCard {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dashboardCard :hover {
+    background-color: blue;
+    color: white;
+    animation-name: card;
+    animation-duration: 1s;
+}
+
+@keyframes example {
+    from {
+        background-color: blue;
+    }
+
+    to {
+        background-color: white;
+    }
+}

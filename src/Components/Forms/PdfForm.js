@@ -1,8 +1,9 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Axios from '../../AxiosInstance';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default function PDFform() {
 
@@ -29,7 +30,13 @@ export default function PDFform() {
         relation_name: false,
         voterid: false,
         status: false,
+        doornum: false
     });
+
+    const genderOptions = [
+      { value: 'Male', label: 'Male' },
+      { value: 'Female', label: 'Female' },
+    ];
 
     const navigate = useNavigate();
     // let serial_num = parseInt(localStorage.getItem("clicked_pdf"));
@@ -42,17 +49,17 @@ export default function PDFform() {
             icon:"error",
         })
     }
+
     const UpdateData = {
         name:VoterName, age: VoterAge, gender: VoterGender, 
         voter_id : VoterID, status: PDFstatus, relation: Relation, 
         relation_name: RelationName, pdf_name : pdf, 
         serial_no: serial_num, house_no:HouseNum, image_path: ImgPath, 
-        data_no:DataNum, created_by: createdBy, created_on: createdOn, modified_on: Date.now(), 
+        data_no:DataNum, created_by: "createdBy", created_on: moment(createdOn).format("YYYY-MM-DD HH:mm:ss"), modified_on: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"), 
         modified_by: localStorage.getItem("Name"), page_no :PageNum, text_data: TextData,
     };
 
     // APIs
-
     const view = ()=>{
         Axios.get(`filter_details/get_document?pdf_name=${pdf}&serial_no=${serial_num}`).then(res =>{
             if(res.statusText == "OK"){
@@ -81,26 +88,27 @@ export default function PDFform() {
     };
 
     const post = () =>{
-        Axios.patch("filter_details/update_document?pdf_name="+ pdf, UpdateData).then((res)=>{
-            if(res.statusText == "OK"){
-                localStorage.removeItem("clicked_pdf")
-                Swal.fire({
-                    icon:"success",
-                    timer:1500,
-                    title: res.data.message
-                })
-                
-                navigate("/pdf_list")
-            }
-        }).catch(err =>{
+      Axios.patch("filter_details/update_document?pdf_name="+ pdf, UpdateData).then((res)=>{
+        console.log(res);
+        if(res.statusText == "OK"){
             Swal.fire({
-              title: err,
-              icon:"error",
-              timer: 1600
+                icon:"success",
+                timer:2000,
+                title: "Updated Successfully"
             })
-        })
-        
-
+            localStorage.removeItem("clicked_pdf")
+            navigate("/pdf_list")
+        }
+          // else if(res.){
+            
+          // }
+      }).catch(err =>{
+          Swal.fire({
+            title: err,
+            icon:"error",
+            // timer: 1600
+          })
+      })
     };
 
     // onclick Functions
@@ -108,23 +116,24 @@ export default function PDFform() {
         navigate("/pdf_list")
     };
 
-  const  onSubmitClick = () =>{
-    const FormError = {
-        name : VoterName.trim() == "" ? true : false,
-        age : VoterAge.trim() == "" ? true : false,
-        gender : VoterGender.trim() == "" ? true : false,
-        relation: Relation.trim() == "" ? true : false,
-        relation_name: RelationName.trim() == "" ? true : false,
-        voterid: VoterID.trim() == "" ? true : false,
-        status: PDFstatus.trim() == "" ? true : false,
-    }
-    setError(FormError)
-    if (Object.values(Error).some(val => val === true)){
-    }
-    else{
-      post()
-    }
-  };
+    const  onSubmitClick = () =>{
+      const FormError = {
+          name : VoterName.trim() == "" ? true : false,
+          age : VoterAge.trim() == "" ? true : false,
+          gender : VoterGender.trim() == "" ? true : false,
+          relation: Relation.trim() == "" ? true : false,
+          relation_name: RelationName.trim() == "" ? true : false,
+          voterid: VoterID.trim() == "" ? true : false,
+          status: PDFstatus.trim() == "" ? true : false,
+          doornum: HouseNum.trim() == "" ? true : false,
+      }
+      setError(FormError)
+      if (Object.values(FormError).some(val => val === true)){
+      }
+      else{
+        post()
+      }
+    };
 
     useEffect(() =>{
         view()
@@ -146,6 +155,9 @@ export default function PDFform() {
           <TextField type='text' label="Gender" size='small' fullWidth value={VoterGender} error={Error.gender} helperText={Error.gender ? "Field is necessary" : ""} onChange={(e => setVoterGender(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
+          <TextField type='text' label="Door number" size='small' fullWidth value={HouseNum} error={Error.doornum} helperText={Error.doornum ? "Field is necessary" : ""} onChange={(e => setHouseNum(e.target.value))} />
+        </Grid>
+        <Grid item sm={6} xs={12}>
           <TextField type='text' label="Voter ID" size='small' fullWidth value={VoterID} error={Error.voterid} helperText={Error.voterid ? "Field is necessary" : ""} onChange={(e => setVoterID(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
@@ -159,7 +171,7 @@ export default function PDFform() {
         </Grid>
       </Grid>
         <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Submit</Button>
+          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Update</Button>
           <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
         </Box>
     </div>
