@@ -34,7 +34,6 @@ export default function Tasks() {
     const EmpTasks = () =>{
         Axios.get("task/assigned_tasks?emp_id="+localStorage.getItem("EmpID")).then(res =>{
             if(res.data.status === "success"){
-                console.log(res);
                 setRows([...res.data.data]);
             }
         }).catch(err =>{
@@ -128,6 +127,21 @@ export default function Tasks() {
             headerAlign: "left", 
             align: "left",
             sortable:false,
+            renderCell : (params) =>{
+                const sts = params.value;
+                let backgroundColor = "";
+                let color = "";
+                if(sts == "completed"){
+                    color = "green"
+                }
+                else if(sts == "progress" ){
+                    color = "blue"
+                }
+                else{
+                    color = "red"
+                }
+                return <div style={{backgroundColor, color}}>{sts}</div>
+            }
         },
         {
             field: "due_date",
@@ -152,7 +166,7 @@ export default function Tasks() {
             sortable:false,
             renderCell: (params) => {
                 return (
-                    <Stack direction="row" spacing={1}>
+                    <Stack sx={{display: localStorage.getItem("Role") == "admin" ? "block" :"none"}} direction="row" spacing={1}>
                         <Tooltip title="Edit"><Link to={`/employee/task/update/${params.row.task_id}`}> <IconButton disableRipple sx={{p:0,}}><EditOutlined/></IconButton></Link></Tooltip>
                         <Tooltip title="Delete"><IconButton disableRipple onClick={()=>{handleRowDelete(params.row.task_id)}} sx={{p:0}}><DeleteOutlineOutlined/></IconButton></Tooltip>
                     </Stack>
@@ -175,8 +189,6 @@ export default function Tasks() {
             localStorage.removeItem("clicked_emp_name");
         }
     }, []);
-
-
 
     return (
         <div>

@@ -13,39 +13,37 @@ export default function PDF() {
   const [selectedAssembly, setSelectedAssembly] = useState(null);
   let location = useLocation();
 
-const ListPDF = async () => {
-  try {
-    const assembly = selectedAssembly || "";
-    
-    // Ensure selectedDistrict is not null before proceeding
-    if (!selectedDistrict) {
-      throw new Error("Please select a district.");
-    }
+  const ListPDF = async () => {
+    try {
+      const assembly = selectedAssembly || "";
+      
+      // Ensure selectedDistrict is not null before proceeding
+      if (!selectedDistrict) {
+        throw new Error("Please select a district.");
+      }
 
-    const response = await Axios.get(`filter_details/district?district=${selectedDistrict.name}&assembly=${assembly}`);
-    // console.log(response.data[0].status);
-    if(response.data.pdf_names){
-      setPdfList([...response.data.pdf_names]);
-    }
-    else if(response.data[0].status == "failed"){
+      const response = await Axios.get(`filter_details/district?district=${selectedDistrict.name}&assembly=${assembly}`);
+      if(response.data.pdf_names){
+        setPdfList([...response.data.pdf_names]);
+      }
+      else if(response.data[0].status == "failed"){
+        Swal.fire({
+          title: response.data[0].message,
+          text: "Check your input data is right",
+          icon:"warning",
+          showConfirmButton: false,
+          timer: 2000
+        })
+        setPdfList([])
+      }
+      
+    } catch (err) {
       Swal.fire({
-        title: response.data[0].message,
-        text: "Check your input data is right",
-        icon:"warning",
-        showConfirmButton: false,
-        timer: 2000
-      })
-      setPdfList([])
+        title: err.message || "An error occurred",
+        icon: "error",
+      });
     }
-    
-  } catch (err) {
-    Swal.fire({
-      title: err.message || "An error occurred",
-      icon: "error",
-    });
-  }
-};
-
+  };
 
   const EmpPDF = () => {
     Axios.get("task/get_emp_pdf?emp_id=" + localStorage.getItem("EmpID")).then(res => {
@@ -67,24 +65,34 @@ const ListPDF = async () => {
     if (!Object.values(FormError).includes(true)) {
       ListPDF();
     }
+    else if(Object.values(FormError).includes(true)){
+      setPdfList([])
+    }
   };
 
   useEffect(() => {
     const role = localStorage.getItem("Role");
     if (location.pathname !== "/pdf_list") {
       localStorage.removeItem("pdf");
+      localStorage.removeItem("clicked_pdf")
     }
 
     if (role === "Employee") {
       EmpPDF();
     }
-  }, [location.pathname]);
+
+    
+    if(selectedDistrict == null) {
+      setPdfList([]) }
+
+  }, [location.pathname,selectedDistrict ]);
 
   return (
     <Grid container rowSpacing={2} columnGap={{ sm: 6, xs: 1 }} marginTop="35px" paddingLeft="25px">
       <Grid sx={{ mb: 2 }} item xs={12}>
         <h1>Processed PDFs</h1>
       </Grid>
+      {/* Dropdown */}
       {
         localStorage.getItem("Role") == "admin" && (
           <>
@@ -130,8 +138,9 @@ const ListPDF = async () => {
         <Grid item xs={12} sm={3} key={index}>
           <Link to="/pdf_list" style={{ textDecoration: "none" }} onClick={() => {
             localStorage.setItem("pdf", val);
+            // localStorage.pdf ? localStorage.setItem("pdf", val) : localStorage.setItem("pdf", "W2")
           }}>
-            <Card style={{ marginBottom: '10px', borderRadius: "15px", cursor: "pointer" }}>
+            <Card style={{ marginBottom: '10px',height:"100px", borderRadius: "15px", cursor: "pointer" }}>
               <CardContent sx={{ display: "flex", justifyContent: "center" }}>
                 <PictureAsPdfIcon sx={{ color: "red" }} />
                 <Typography sx={{ ml: 1 }} variant="h5">{val}</Typography>

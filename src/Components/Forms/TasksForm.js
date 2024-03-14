@@ -1,4 +1,4 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Axios from '../../AxiosInstance';
@@ -150,31 +150,31 @@ export default function TasksForm() {
         <Grid item sm={6} xs={12}>
           <TextField type='text' label="Task Description" size='small' value={task} error={Error.desc} helperText={Error.desc ? "Field is necessary" : ""} onChange={(e => setTask(e.target.value))} fullWidth  />
         </Grid>
-  {/* <Grid item xs={12} sm={6}>
-    <Autocomplete
-      fullWidth
-      options={pdf} // Assuming pdf is an array of options fetched from the database
-      value={selectedPDF} // You need to maintain a state for the selected PDF
-      onChange={(event, newValue) => setSelectedPDF(newValue)} // Update the selected PDF
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="PDF Name"
-          size="small"
-          error={Error.pdf}
-          helperText={Error.pdf ? "Field is necessary" : ""}
-        />
-      )}
-    />
-  </Grid> */}
         <Grid item sm={6} xs={12}>
           <TextField type='text' label="PDF Name" size='small' fullWidth value={pdf} error={Error.pdf} helperText={Error.pdf ? "Field is necessary" : ""} onChange={(e => setPDF(e.target.value.split(",")))} />
         </Grid>
-        <Grid item sm={6} xs={12}>
+        {/* <Grid item sm={6} xs={12}>
           <TextField type='text' label="Priority" size='small' fullWidth value={priority} error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))} />
+        </Grid> */}
+        <Grid item sm={6} xs={12}>
+          <FormControl size='small' fullWidth>
+            <InputLabel>Priority</InputLabel>
+            <Select value={priority} label="Priority" size='small' error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))}>
+              <MenuItem value="level-1">Level 1</MenuItem>
+              <MenuItem value="level-2">Level 2</MenuItem>
+              <MenuItem value="level-3">Level 3</MenuItem>
+            </Select> 
+          </FormControl>
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Status" size='small' placeholder='completed / progress' fullWidth value={status} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))} />
+          <FormControl size='small' fullWidth>
+            <InputLabel>Status</InputLabel>
+            <Select value={status} size='small' label="Status" defaultValue='progress' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))}>
+              <MenuItem value="completed">Completed</MenuItem>
+              <MenuItem value="progress">Progress</MenuItem>
+            </Select> 
+          </FormControl>
+          {/* <TextField type='text' label="Status" size='small' placeholder='completed / progress' fullWidth value={status} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))} /> */}
         </Grid>
         <Grid item sm={6} xs={12}>
             <TextField inputProps={{ max:"2024-12-31"}} type='date' label='Due Date' size='small' fullWidth value={due} error={Error.date} helperText={Error.date ? "Field is necessary" : ""} onChange={(e => setDue(e.target.value))} />
@@ -184,7 +184,7 @@ export default function TasksForm() {
           <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>
             {params.action == "create" ? "Create" :params.action == "update" ? "Update" :"" }
             </Button>
-          <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
+          <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white", marginLeft:"10px"}}>Cancel</Button>
         </Box>
     </div>
   )

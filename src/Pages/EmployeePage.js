@@ -7,6 +7,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import Axios from '../AxiosInstance';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+// import "../Assets/CSS/style.css";
 
 export default function Employee() {
 
@@ -78,7 +79,7 @@ export default function Employee() {
         {
             field: "name",
             headerName: "Employee Name",
-            width: 150,
+            width: 200,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -87,7 +88,7 @@ export default function Employee() {
         {
             field: "email",
             headerName: "email",
-            width: 300,
+            flex:1,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -96,7 +97,7 @@ export default function Employee() {
         {
             field: "phone_number",
             headerName: "Phone Number",
-            width: 150,
+            flex:1,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -105,7 +106,7 @@ export default function Employee() {
         {
             field: "none",
             headerName: "Action",
-            width: 150,
+            flex:1,
             editable: false,
             headerAlign: "left", 
             align: "left",
@@ -128,17 +129,18 @@ export default function Employee() {
 
 
     return (
-        <div>
-            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", marginTop:"35px", borderRadius: "20px"}}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"93vh", paddingTop:"55px"}}>
+            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", borderRadius: "20px"}}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", paddingTop:2,  }}>
                     <h1 style={{ fontWeight: "bold", color:"black !Important"  }}>Employees</h1>
                     <Link to='/employee/create' underline="none"> <Button style={{ backgroundColor: "#4daaff" }} disableRipple disableElevation variant='contained'>Add New</Button></Link>
                 </Box>
-                {loading ? (
+                <StyledDataGrid columns={columns} rows={rows} id='emp_id' />
+                {/* {loading ? (
                       <CircularProgress />
                   ) : (
                     <StyledDataGrid columns={columns} rows={rows} id='emp_id' />
-                  )}
+                  )} */}
                 
             </div>
         </div>

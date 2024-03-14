@@ -1,9 +1,10 @@
-import { Autocomplete, Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Axios from '../../AxiosInstance';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import VoterImage from "../../Assets/Images/Logo/logo.png";
 
 export default function PDFform() {
 
@@ -33,25 +34,21 @@ export default function PDFform() {
         doornum: false
     });
 
-    const genderOptions = [
-      { value: 'Male', label: 'Male' },
-      { value: 'Female', label: 'Female' },
-    ];
-
     const navigate = useNavigate();
     // let serial_num = parseInt(localStorage.getItem("clicked_pdf"));
     let serial_num = (localStorage.getItem("clicked_pdf"));
     let pdf = localStorage.getItem("pdf");
 
-    if( serial_num == "" || pdf == ""){
+    if( serial_num == "" || pdf == "" || pdf == null){
         Swal.fire({
             title:"Necessary details not found from database",
             icon:"error",
         })
+        navigate("/pdf")
     }
 
     const UpdateData = {
-        name:VoterName, age: VoterAge, gender: VoterGender, 
+        name: VoterName, age: VoterAge, gender: VoterGender, 
         voter_id : VoterID, status: PDFstatus, relation: Relation, 
         relation_name: RelationName, pdf_name : pdf, 
         serial_no: serial_num, house_no:HouseNum, image_path: ImgPath, 
@@ -61,6 +58,7 @@ export default function PDFform() {
 
     // APIs
     const view = ()=>{
+      pdf && (
         Axios.get(`filter_details/get_document?pdf_name=${pdf}&serial_no=${serial_num}`).then(res =>{
             if(res.statusText == "OK"){
                 setVoterName(res.data.name ? res.data.name : "")
@@ -84,24 +82,25 @@ export default function PDFform() {
                 icon:"error",
                 timer:2000
             })
-        });
+        })
+      )
     };
 
     const post = () =>{
+
       Axios.patch("filter_details/update_document?pdf_name="+ pdf, UpdateData).then((res)=>{
-        console.log(res);
         if(res.statusText == "OK"){
             Swal.fire({
                 icon:"success",
                 timer:2000,
                 title: "Updated Successfully"
             })
+
             localStorage.removeItem("clicked_pdf")
             navigate("/pdf_list")
         }
-          // else if(res.){
-            
-          // }
+
+
       }).catch(err =>{
           Swal.fire({
             title: err,
@@ -137,12 +136,16 @@ export default function PDFform() {
 
     useEffect(() =>{
         view()
+        if(localStorage.pdf == null){
+          navigate("/pdf")
+        }
     }, [])
 
   return (
     <div style={{ height:"100vh"}}>
-      <Grid container sx={{p:2,mt:5 } } rowGap={3} columnGap={5} paddingLeft={5} paddingTop={3} justifyContent="center">
-        <Grid item xs={12} sm={6} sx={{textAlign: "center"}}>
+      <Grid container sx={{p:2,pt:5 } } rowGap={3} columnGap={5} paddingLeft={5} paddingTop={3} justifyContent="center">
+        <img src={VoterImage} alt='votye'  style={{position:"sticky", top:100}} />
+        <Grid item xs={12}  sx={{textAlign: "center"}}>
           <h1>Edit PDF details</h1>
         </Grid>
         <Grid item sm={6} xs={12}>
@@ -167,8 +170,17 @@ export default function PDFform() {
           <TextField type='text' label="Realation Type" size='small' fullWidth value={Relation} error={Error.relation} helperText={Error.relation ? "Field is necessary" : ""} onChange={(e => setRelation(e.target.value))} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Status" size='small' fullWidth value={PDFstatus} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))} />
+          <FormControl size='small' fullWidth>
+            <InputLabel>Status</InputLabel>
+            <Select value={PDFstatus} label="Status" size='small' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))}>
+              <MenuItem value="completed">Completed</MenuItem>
+              <MenuItem value="partially completed">Partially Completed</MenuItem>
+            </Select> 
+          </FormControl>
         </Grid>
+        {/* <Grid item sm={6} xs={12}>
+          <TextField type='text' label="Status" size='small' fullWidth value={PDFstatus} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))} />
+        </Grid> */}
       </Grid>
         <Box sx={{display:"flex", justifyContent:"center"}}>
           <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Update</Button>

@@ -1,20 +1,10 @@
 .dashboardCard {
-    transition: background-color 0.3s ease, color 0.3s ease;
+    background-image: url(../Images/Logo/card_bg.jpg);
+    opacity: 0.5;
+    color: wheat !important;
 }
 
-.dashboardCard :hover {
-    background-color: blue;
-    color: white;
-    animation-name: card;
-    animation-duration: 1s;
-}
-
-@keyframes example {
-    from {
-        background-color: blue;
-    }
-
-    to {
-        background-color: white;
-    }
+.dashboardCard:hover {
+    opacity: 1;
+    color: white !important;
 }

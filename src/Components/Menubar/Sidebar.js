@@ -47,7 +47,7 @@ export default function MiniDrawer({ open, setOpen }) {
                             <img alt='Logo' src={Logo} />        
                         </Toolbar>
                     </Link>
-                    <IconButton sx={{ backgroundColor: "#FFF", p: "3px 5px" }} onClick={handleDrawerClose}>
+                    <IconButton sx={{ color: "#FFF", p: "3px 5px" }} onClick={handleDrawerClose}>
                         <i className="bi bi-x"></i>
                     </IconButton>
                 </DrawerHeader>
@@ -55,7 +55,7 @@ export default function MiniDrawer({ open, setOpen }) {
                 <List sx={{ padding: "10px" }}>
                     {((localStorage.getItem("Role") == "admin") ? AdminJSON : EmployeeJSON).map((val, index) => (
                         <Link key={index} className="navLinks" to={val.path} style={{ color: "#FFF", textDecoration: "none" }} onClick={() => handleNavClick(val.openMenu)} >
-                            <ListItem disablePadding sx={{ display: 'block' }}>
+                            <ListItem disablePadding disableRipple sx={{ display: 'block' }}>
                                 <ListItemButton className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} 
                                     sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center',  px: 2.5, mb: 1 }} >
                                     <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
@@ -100,8 +100,8 @@ export default function MiniDrawer({ open, setOpen }) {
                 <List sx={{ padding: "10px" }}>
                     {((localStorage.getItem("Role") == "admin") ? AdminJSON : EmployeeJSON).map((val, index) => (
                         <Link key={index} className="navLinks" to={val.path} style={{ textDecoration: "none", color: "#FFF" }} onClick={() => handleNavClick(val.openMenu)} >
-                            <ListItem disablePadding sx={{ display: 'block' }}>
-                                <ListItemButton className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, mb: 1 }} >
+                            <ListItem disablePadding disableRipple sx={{ display: 'block' }}>
+                                <ListItemButton disableRipple className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, mb: 1 }} >
                                     <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center', }}>
                                         <i className={val.icon} style={{ color: val.path == location.pathname || location.pathname.includes(val.path) ? "#000" : "#FFF" }}></i>
                                     </ListItemIcon>

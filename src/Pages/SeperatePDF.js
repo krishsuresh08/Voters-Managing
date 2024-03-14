@@ -13,7 +13,7 @@ export default function SeperatePDF() {
     const [rows, setRows] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
-    let pdfNum = localStorage.getItem("pdf");
+    let pdfNum = localStorage.getItem("pdf").trim();
 
     function formatDate(value) {
         if (!value) return "";
@@ -88,42 +88,6 @@ export default function SeperatePDF() {
         }
     };
 
-    // Delete row 
-    const handleRowDelete = (PDFID)=>{
-        Swal.fire({
-            title:"Are you Sure ?",
-            text:"You want to delete it?",
-            icon:"warning",
-            confirmButtonText:"Yes Delete it",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-        }).then((result) => {
-            if(result.isConfirmed){
-                // delete api
-                Axios.post(`employee/delete`, {emp_id: PDFID}).then((res)=>{
-                    if (res.data.status === true){
-                        ListPDF()
-                    }
-                })
-                Swal.fire({
-                    title:"Deleted",
-                    text :"The data deleted successfully",
-                    icon:"success"
-                })
-            }
-            else if(result.dismiss){
-                Swal.fire({
-                    title:"Cancelled",
-                    text :"The data is not deleted",
-                    icon:"info",
-                    showConfirmButton:false,
-                    timer: 1500
-                })
-            }
-        })
-
-    };
 
     // table column
     const columns = [

@@ -1,9 +1,10 @@
 import { Grid } from '@mui/material';
 import React, { useState } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import MyRouter from '../../Routes/Router';
 import MiniDrawer from '../Menubar/Sidebar';
 import Navbar from '../Menubar/Topbar';
+import LoginForm from '../Forms/LoginForm';
 
 function Layout() {
   const [open, setOpen] = useState(false)
@@ -32,7 +33,7 @@ function Layout() {
             :
             // (localStorage.getItem("Role" == "admin" || localStorage.getItem("Role" == "employee")))
             <Grid item xs={12}>
-                <MyRouter />
+                <LoginForm />
             </Grid>
       }
 
