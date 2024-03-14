@@ -106,7 +106,7 @@ export default function LoginForm() {
   return (
     <div>
       <Grid container sx={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', p:3, display :"flex", justifyContent:"center",alignItems:"center", height:"100vh" }}>
-        <Grid item xs={12} md={6} sx={{background:"white",borderRadius:"20px", p:3}} >
+        <Grid item xs={12} md={4} sx={{background:"white",borderRadius:"20px", p:3}} >
           <Box>
             <Typography variant='h3' sx={{fontWeight:"bold", pb:2}}>Login</Typography>
             <Box sx={{pt:3}} >

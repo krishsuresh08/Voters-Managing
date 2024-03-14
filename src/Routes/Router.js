@@ -1,6 +1,5 @@
 import React from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import Dashboard from '../Pages/dashboard';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import EmployeeForm from '../Components/Forms/EmployeeForm';
 import Employee from '../Pages/EmployeePage';
 import LoginForm from '../Components/Forms/LoginForm';

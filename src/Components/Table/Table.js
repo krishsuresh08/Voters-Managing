@@ -25,7 +25,7 @@ export default function QuickFilteringGrid(props) {
   // Customized Tool Bar
   const CustomToolBar = ()=>{
     return(
-      <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center",m:"10px", }}>
+      <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center",m:props.filter ? "10px" : "", }}>
         {props.filter ?
         <Select sx={{width:"200px"}} value={filter} size='small' onChange={(e)=> filterChange(e.target.value)}>
           <MenuItem value='All'>All</MenuItem>

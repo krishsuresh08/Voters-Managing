@@ -127,7 +127,7 @@ export default function PDF() {
                 />
               </Box>
             </Grid>
-            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+            <Grid item xs={12} lg={11.5} sx={{ display: "flex", justifyContent: "center" }}>
               <Button variant='contained' onClick={onFetchClick}>Fetch</Button>
             </Grid>
           </>

@@ -13,7 +13,7 @@ export default function SeperatePDF() {
     const [rows, setRows] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
-    let pdfNum = localStorage.getItem("pdf").trim();
+    let pdfNum = localStorage.pdf && localStorage.getItem("pdf").trim();
 
     function formatDate(value) {
         if (!value) return "";
@@ -25,9 +25,10 @@ export default function SeperatePDF() {
             setRows([...res.data]);
         }).catch(err =>{
             Swal.fire({
-                title: err,
-                icon:"error",
-                timer : 1650
+                text: err,
+                title:"try again",
+                icon:"warning",
+                timer : 1500
             })
         });
     };
@@ -60,7 +61,7 @@ export default function SeperatePDF() {
         handleClose()
         } catch (error) {
             Swal.fire({
-                title:error,
+                title:"data cannot br found",
                 icon:"error"
             })
         }

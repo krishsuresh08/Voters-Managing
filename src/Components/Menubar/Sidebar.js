@@ -25,6 +25,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 export default function MiniDrawer({ open, setOpen }) {
+    
     const location = useLocation();
     const [childOpen, setchildOpen] = useState("");
 
@@ -40,7 +41,7 @@ export default function MiniDrawer({ open, setOpen }) {
         <Box sx={{ display: 'flex' }}>
             {/* drawer */}
             <Drawer sx={{ width: "inherit", display: { xs: 'block', md: 'none' }, flexShrink: 0, '& .MuiDrawer-paper': { width: "inherit", zIndex: 9999999999, boxSizing: 'border-box', backgroundColor: "#6FA8DC" }, }}
-                variant="temporary" anchor="left" onClose={() => setOpen(false)} open={open}>
+            variant="temporary" anchor="left" onClose={() => setOpen(false)} open={open}>
                 <DrawerHeader>
                     <Link to="/dashboard" style={{ color: "inherit", textDecoration: "none" }}>
                         <Toolbar sx={{ backgroundImage: `url${Logo}`, color: "#FFF", textAlign: "center", width:"100%", }}>
@@ -53,7 +54,8 @@ export default function MiniDrawer({ open, setOpen }) {
                 </DrawerHeader>
                 <Divider sx={{ "backgroundColor": "#FFF" }} />
                 <List sx={{ padding: "10px" }}>
-                    {((localStorage.getItem("Role") == "admin") ? AdminJSON : EmployeeJSON).map((val, index) => (
+                    {
+                    ((localStorage.getItem("Role") == "admin") ? AdminJSON : EmployeeJSON).map((val, index) => (
                         <Link key={index} className="navLinks" to={val.path} style={{ color: "#FFF", textDecoration: "none" }} onClick={() => handleNavClick(val.openMenu)} >
                             <ListItem disablePadding disableRipple sx={{ display: 'block' }}>
                                 <ListItemButton className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} 
@@ -66,27 +68,27 @@ export default function MiniDrawer({ open, setOpen }) {
                             </ListItem>
                             <Collapse in={childOpen == val.openMenu} timeout="auto" unmountOnExit>
                                 {
-                                    val.children && val.children.map((val, ind) => {
-                                        return (
-                                            <Link key={ind} className="navLinks" to={val.path} style={{ textDecoration: "none", color: "#FFF" }}>
-                                                <List component="div" disablePadding>
-                                                    <ListItem className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} >
-                                                        <ListItemIcon>
-                                                            <i className={val.icon} style={{ color: val.path == location.pathname ? "#000" : "#FFF" }}></i>
-                                                        </ListItemIcon>
-                                                        <ListItemText sx={{ pl: "10px" }} primary={val.comp} />
-                                                    </ListItem>
-                                                </List>
-                                            </Link>
+                                val.children && val.children.map((val, ind) => {
+                                    return (
+                                        <Link key={ind} className="navLinks" to={val.path} style={{ textDecoration: "none", color: "#FFF" }}>
+                                            <List component="div" disablePadding>
+                                                <ListItem className={(val.path == location.pathname || location.pathname.includes(val.path)) ? "active" : ""} >
+                                                    <ListItemIcon>
+                                                        <i className={val.icon} style={{ color: val.path == location.pathname ? "#000" : "#FFF" }}></i>
+                                                    </ListItemIcon>
+                                                    <ListItemText sx={{ pl: "10px" }} primary={val.comp} />
+                                                </ListItem>
+                                            </List>
+                                        </Link>
                                         )
                                     })
                                 }
                             </Collapse>
                         </Link>
-                    ))}
+                        ))
+                    }
                 </List>
             </Drawer>
-            <DrawerHeader />
             {/* permanent drawer */}
             <Drawer variant="permanent" sx={{ display: { xs: 'none', sm: 'block' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: { md: "23.4%", lg: "16.7%" }, position: "fixed", backgroundColor: "#6FA8DC", overflow: "hidden" }, }} open={true} >
                 <DrawerHeader>
