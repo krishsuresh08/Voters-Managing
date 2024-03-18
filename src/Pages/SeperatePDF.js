@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, IconButton, Tooltip, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Stack, IconButton, Tooltip, Menu, MenuItem, Grid } from '@mui/material';
 import StyledDataGrid from '../Components/Table/Table';
 import { Link, useNavigate } from 'react-router-dom';
 import { EditOutlined} from '@mui/icons-material';
@@ -267,19 +267,24 @@ export default function SeperatePDF() {
 
 
     return (
-        <div>
-            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", borderRadius: "20px" }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <h1 style={{ fontWeight: "bold", color:"black"  }}>PDF</h1>
-                    <div style={{display:"flex"}}>
-                    <Button variant='contained' endIcon={<ArrowDropDownIcon />} onClick={handleExportClick}>Export</Button>
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                        <MenuItem onClick={onExportClick}>Export All</MenuItem>
-                        <MenuItem onClick={onExportCompleted}>Export Completed</MenuItem>
-                    </Menu>
-                    <Link to='/pdf' underline="none"> <Button style={{ backgroundColor: "#4daaff", marginLeft:"10px" }} disableRipple disableElevation variant='contained'>Back</Button></Link>
-                    </div>
-                </Box>
+        <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"120%", paddingTop:"30px", paddingBottom:"20px"}}>
+            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", margin: "20px",paddingBottom:"20px", borderRadius: "20px" }}>
+                <Grid container rowGap={2} sx={{ display: "flex", justifyContent: "space-between", pt:2  }}>
+                    <Grid item xs={11} sm={9}>
+                        <h1 style={{ fontWeight: "bold", color:"black" , marginLeft:"10px" }}>PDF</h1>
+                    </Grid>
+                    <Grid item xs={11} sm={3}>
+                        <div style={{display:"flex", justifyContent:"space-between"}}>
+                                <Button variant='contained' endIcon={<ArrowDropDownIcon />} onClick={handleExportClick}>Export</Button>
+                                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                                    <MenuItem onClick={onExportClick}>Export All</MenuItem>
+                                    <MenuItem onClick={onExportCompleted}>Export Completed</MenuItem>
+                                </Menu>
+                                <Link to='/pdf' underline="none"> <Button style={{ backgroundColor: "#4daaff", marginRight:"10px" }} variant='contained'>Back</Button></Link>
+                            </div>
+                    </Grid>
+ 
+                </Grid>
                 <StyledDataGrid columns={columns} rows={rows} filter={true} id='_id' />
             </div>
         </div>

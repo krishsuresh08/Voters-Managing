@@ -10,6 +10,7 @@ import Tasks from '../Pages/Tasks';
 import TasksForm from '../Components/Forms/TasksForm';
 import PDFform from '../Components/Forms/PdfForm';
 import CDashboard from '../Pages/CDashboard';
+import NotFound from '../Pages/NotFound';
 
 function MyRouter() {
 
@@ -32,6 +33,7 @@ function MyRouter() {
                     <Route path='/tasks' element = {<Tasks/>} />
                     <Route path='/employee/task/:action' element = {<TasksForm/>} />
                     <Route path='/employee/task/:action/:ID' element = {<TasksForm/>} />
+                    <Route path='*' element = {<NotFound/>} />
                 </Routes>
                 :
                 location.pathname !== "/auth/login" && localStorage.getItem("Role") == "Employee" ? 
@@ -42,9 +44,10 @@ function MyRouter() {
                     <Route path='/pdf_list' element = {<SeperatePDF/>} />
                     <Route path='/pdf/update' element = {<PDFform/>} />
                     <Route path='/tasks' element = {<Tasks/>} />
+                    <Route path='*' element = {<NotFound/>} />
                 </Routes>
                 :
-                ((localStorage.getItem("Role") == "admin" ) || (localStorage.getItem("Role") == "admin" ) ) && location.pathname == "/auth/login" ?
+                ((localStorage.getItem("Role") == "admin" ) || (localStorage.getItem("Role") == "Employee" ) ) && location.pathname == "/auth/login" ?
                 <Navigate to="/dashboard"  />
                 :
                 (<Routes>

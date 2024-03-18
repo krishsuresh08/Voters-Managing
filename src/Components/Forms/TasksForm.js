@@ -89,17 +89,6 @@ export default function TasksForm() {
       })
     }
 
-    // const ListPDF = () => {
-    //     Axios.get('filter_details/list_pdf').then((res) => {
-    //       setPDF([...res.data.collections]);
-    //     }).catch(err => {
-    //       Swal.fire({
-    //         title:err,
-    //         icon:"error",
-    //       })
-    //     });
-    // };
-
     // onclick Functions
     const onCancelClick = () =>{
       if(params.action == "create") {
@@ -142,50 +131,54 @@ export default function TasksForm() {
     }, [])
 
   return (
-    <div style={{ height:"100vh"}}>
-      <Grid container sx={{p:2,mt:5 } } rowGap={3} columnGap={5} paddingLeft={5} paddingTop={3} justifyContent="center">
-        <Grid item xs={12} sm={6} sx={{textAlign: "center"}}>
-          <h1>Assign Task</h1>
+    <div style={{ background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"93vh", paddingTop:"30px"}}>
+      <Grid container justifyContent="center">
+        <Grid item xs={12} sm={6}>
+        <Grid container style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", borderRadius: "20px"}} rowGap={3} columnGap={5} paddingTop={3} justifyContent="center">
+          <Grid item xs={12} sx={{textAlign: "center"}}>
+            <h1>Assign Task</h1>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField type='text' label="Task Description" size='small' value={task} error={Error.desc} helperText={Error.desc ? "Field is necessary" : ""} onChange={(e => setTask(e.target.value))} fullWidth  />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField type='text' label="PDF Name" size='small' fullWidth value={pdf} error={Error.pdf} helperText={Error.pdf ? "Field is necessary" : ""} onChange={(e => setPDF(e.target.value.split(",")))} />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl size='small' fullWidth>
+              <InputLabel>Priority</InputLabel>
+              <Select value={priority} label="Priority" size='small' error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))}>
+                <MenuItem value="level-1">Level 1</MenuItem>
+                <MenuItem value="level-2">Level 2</MenuItem>
+                <MenuItem value="level-3">Level 3</MenuItem>
+              </Select> 
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl size='small' fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select value={status} size='small' label="Status" defaultValue='progress' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))}>
+                <MenuItem value="completed">Completed</MenuItem>
+                <MenuItem value="progress">Progress</MenuItem>
+              </Select> 
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+              <TextField inputProps={{ max:"2024-12-31"}} type='date' label='Due Date' size='small' fullWidth value={due} error={Error.date} helperText={Error.date ? "Field is necessary" : ""} onChange={(e => setDue(e.target.value))} />
+          </Grid>
+          <Grid item xs={12}>
+            <Box sx={{display:"flex", justifyContent:"center"}}>
+              <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>
+                {params.action == "create" ? "Create" :params.action == "update" ? "Update" :"" }
+                </Button>
+              <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white", marginLeft:"10px"}}>Cancel</Button>
+            </Box>        
+          </Grid>
         </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Task Description" size='small' value={task} error={Error.desc} helperText={Error.desc ? "Field is necessary" : ""} onChange={(e => setTask(e.target.value))} fullWidth  />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="PDF Name" size='small' fullWidth value={pdf} error={Error.pdf} helperText={Error.pdf ? "Field is necessary" : ""} onChange={(e => setPDF(e.target.value.split(",")))} />
-        </Grid>
-        {/* <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Priority" size='small' fullWidth value={priority} error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))} />
-        </Grid> */}
-        <Grid item sm={6} xs={12}>
-          <FormControl size='small' fullWidth>
-            <InputLabel>Priority</InputLabel>
-            <Select value={priority} label="Priority" size='small' error={Error.priority} helperText={Error.priority ? "Field is necessary" : ""} onChange={(e => setPriority(e.target.value))}>
-              <MenuItem value="level-1">Level 1</MenuItem>
-              <MenuItem value="level-2">Level 2</MenuItem>
-              <MenuItem value="level-3">Level 3</MenuItem>
-            </Select> 
-          </FormControl>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <FormControl size='small' fullWidth>
-            <InputLabel>Status</InputLabel>
-            <Select value={status} size='small' label="Status" defaultValue='progress' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))}>
-              <MenuItem value="completed">Completed</MenuItem>
-              <MenuItem value="progress">Progress</MenuItem>
-            </Select> 
-          </FormControl>
-          {/* <TextField type='text' label="Status" size='small' placeholder='completed / progress' fullWidth value={status} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setStatus(e.target.value))} /> */}
-        </Grid>
-        <Grid item sm={6} xs={12}>
-            <TextField inputProps={{ max:"2024-12-31"}} type='date' label='Due Date' size='small' fullWidth value={due} error={Error.date} helperText={Error.date ? "Field is necessary" : ""} onChange={(e => setDue(e.target.value))} />
         </Grid>
       </Grid>
-        <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>
-            {params.action == "create" ? "Create" :params.action == "update" ? "Update" :"" }
-            </Button>
-          <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white", marginLeft:"10px"}}>Cancel</Button>
-        </Box>
+
+
     </div>
   )
 }

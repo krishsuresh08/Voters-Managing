@@ -5,6 +5,7 @@ import MyRouter from '../../Routes/Router';
 import MiniDrawer from '../Menubar/Sidebar';
 import Navbar from '../Menubar/Topbar';
 import LoginForm from '../Forms/LoginForm';
+import NotFound from '../../Pages/NotFound';
 
 function Layout() {
   const [open, setOpen] = useState(false)
@@ -31,7 +32,6 @@ function Layout() {
                 </Grid>
             </React.Fragment>
             :
-            // (localStorage.getItem("Role" == "admin" || localStorage.getItem("Role" == "employee")))
             <Grid item xs={12}>
                 <LoginForm />
             </Grid>

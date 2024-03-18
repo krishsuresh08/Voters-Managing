@@ -87,7 +87,6 @@ export default function PDFform() {
     };
 
     const post = () =>{
-
       Axios.patch("filter_details/update_document?pdf_name="+ pdf, UpdateData).then((res)=>{
         if(res.statusText == "OK"){
             Swal.fire({
@@ -99,8 +98,6 @@ export default function PDFform() {
             localStorage.removeItem("clicked_pdf")
             navigate("/pdf_list")
         }
-
-
       }).catch(err =>{
           Swal.fire({
             title: err,
@@ -142,50 +139,61 @@ export default function PDFform() {
     }, [])
 
   return (
-    <div style={{ height:"100vh"}}>
-      <Grid container sx={{p:2,pt:5 } } rowGap={3} columnGap={5} paddingLeft={5} paddingTop={3} justifyContent="center">
-        <img src={VoterImage} alt='votye'  style={{position:"sticky", top:100}} />
-        <Grid item xs={12}  sx={{textAlign: "center"}}>
-          <h1>Edit PDF details</h1>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Name" size='small' value={VoterName} error={Error.name} helperText={Error.name ? "Field is necessary" : ""} onChange={(e => setVoterName(e.target.value))} fullWidth  />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Age" size='small' fullWidth value={VoterAge} error={Error.age} helperText={Error.age ? "Field is necessary" : ""} onChange={(e => setVoterAge(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Gender" size='small' fullWidth value={VoterGender} error={Error.gender} helperText={Error.gender ? "Field is necessary" : ""} onChange={(e => setVoterGender(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Door number" size='small' fullWidth value={HouseNum} error={Error.doornum} helperText={Error.doornum ? "Field is necessary" : ""} onChange={(e => setHouseNum(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Voter ID" size='small' fullWidth value={VoterID} error={Error.voterid} helperText={Error.voterid ? "Field is necessary" : ""} onChange={(e => setVoterID(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Relation Name" size='small' fullWidth value={RelationName} error={Error.relation_name} helperText={Error.relation_name ? "Field is necessary" : ""} onChange={(e => setRelationName(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Realation Type" size='small' fullWidth value={Relation} error={Error.relation} helperText={Error.relation ? "Field is necessary" : ""} onChange={(e => setRelation(e.target.value))} />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <FormControl size='small' fullWidth>
-            <InputLabel>Status</InputLabel>
-            <Select value={PDFstatus} label="Status" size='small' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))}>
-              <MenuItem value="completed">Completed</MenuItem>
-              <MenuItem value="partially completed">Partially Completed</MenuItem>
-            </Select> 
-          </FormControl>
-        </Grid>
-        {/* <Grid item sm={6} xs={12}>
-          <TextField type='text' label="Status" size='small' fullWidth value={PDFstatus} error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))} />
+    <div style={{ height:"100%", background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', paddingTop:"30px"}}>
+      {/* <Box sx={{display:{md:"none", xs:"flex"}, justifyContent:"center"}}>
+          <img src={VoterImage} style={{position:"sticky", top:0}} width="200px" height="100px" />
+      </Box> */}
+      <Grid container justifyContent="center">
+        {/* <Grid item sm={5} sx={{display:{md:"none", xs:"flex"}, justifyContent:"center"}} >
+          <img src={VoterImage} style={{position:"sticky", top:0}} width="200px" height="100px" />
         </Grid> */}
+        <Grid item md={6} style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", margin: "20px", borderRadius: "20px"}}>
+          <Grid container rowGap={3} justifyContent="center" paddingTop={3}>
+            <Grid item xs={12}  sx={{textAlign: "center"}}>
+              <h1>Edit PDF details</h1>
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Name" size='small' value={VoterName} error={Error.name} helperText={Error.name ? "Field is necessary" : ""} onChange={(e => setVoterName(e.target.value))} fullWidth  />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Age" size='small' fullWidth value={VoterAge} error={Error.age} helperText={Error.age ? "Field is necessary" : ""} onChange={(e => setVoterAge(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Gender" size='small' fullWidth value={VoterGender} error={Error.gender} helperText={Error.gender ? "Field is necessary" : ""} onChange={(e => setVoterGender(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Door number" size='small' fullWidth value={HouseNum} error={Error.doornum} helperText={Error.doornum ? "Field is necessary" : ""} onChange={(e => setHouseNum(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Voter ID" size='small' fullWidth value={VoterID} error={Error.voterid} helperText={Error.voterid ? "Field is necessary" : ""} onChange={(e => setVoterID(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Relation Name" size='small' fullWidth value={RelationName} error={Error.relation_name} helperText={Error.relation_name ? "Field is necessary" : ""} onChange={(e => setRelationName(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField type='text' label="Realation Type" size='small' fullWidth value={Relation} error={Error.relation} helperText={Error.relation ? "Field is necessary" : ""} onChange={(e => setRelation(e.target.value))} />
+            </Grid>
+            <Grid item xs={11}>
+              <FormControl size='small' fullWidth>
+                <InputLabel>Status</InputLabel>
+                <Select value={PDFstatus} label="Status" size='small' error={Error.status} helperText={Error.status ? "Field is necessary" : ""} onChange={(e => setPDFstatus(e.target.value))}>
+                  <MenuItem value="completed">Completed</MenuItem>
+                  <MenuItem value="partially completed">Partially Completed</MenuItem>
+                </Select> 
+              </FormControl>
+            </Grid>
+            <Grid item xs={11}>
+              <Box sx={{display:"flex", justifyContent:"center", paddingBottom:"20px"}}>
+                <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Update</Button>
+                <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
+              </Box>        
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item sm={5} sx={{display:{md:"flex", xs:"none"}, justifyContent:"center"}} >
+          <img src={VoterImage} style={{position:"sticky", top:250}} width="200px" height="100px" />
+        </Grid>
       </Grid>
-        <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Button variant='contained' disableRipple disableElevation onClick={onSubmitClick}>Update</Button>
-          <Button variant='contained' disableRipple disableElevation onClick={onCancelClick} style={{backgroundColor:"red", color:"white"}}>Cancel</Button>
-        </Box>
     </div>
   )
 }

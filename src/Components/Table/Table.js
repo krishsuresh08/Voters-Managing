@@ -54,8 +54,6 @@ export default function QuickFilteringGrid(props) {
         autoHeight
         disableColumnMenu
         GridColDef={false}
-        // hideFooter={true}
-        // rows={list}
         getRowId={(row)=> typeof(props.id) == "string" ? row[props.id] : props.id}
         disableColumnFilter
         disableColumnSelector

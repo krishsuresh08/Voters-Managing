@@ -130,10 +130,10 @@ export default function Employee() {
 
     return (
         <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"93vh", paddingTop:"55px"}}>
-            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", borderRadius: "20px"}}>
+            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", margin: "20px", paddingBottom:"20px", borderRadius: "20px"}}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", paddingTop:2,  }}>
-                    <h1 style={{ fontWeight: "bold", color:"black !Important"  }}>Employees</h1>
-                    <Link to='/employee/create' underline="none"> <Button style={{ backgroundColor: "#4daaff" }} disableRipple disableElevation variant='contained'>Add New</Button></Link>
+                    <h1 style={{ fontWeight: "bold", color:"black", marginLeft:"10px"  }}>Employees</h1>
+                    <Link to='/employee/create' underline="none"> <Button style={{ backgroundColor: "#4daaff",  marginRight:"10px" }} disableRipple disableElevation variant='contained'>Add New</Button></Link>
                 </Box>
                 <StyledDataGrid columns={columns} rows={rows} id='emp_id' />
                 {/* {loading ? (

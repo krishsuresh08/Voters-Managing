@@ -55,7 +55,7 @@ export default function LoginForm() {
             setLoading(false)
             if(err.response.data.detail == "Incorrect Password"){
               Swal.fire({
-                title:"Email or Password is incorrect",
+                title:"Password is incorrect",
                 text:"Try Again!!",
                 timer: 1500,
                 showConfirmButton:false,
@@ -88,7 +88,6 @@ export default function LoginForm() {
           Swal.fire({
             title:"Database not connected",
             icon:"error",
-            timer: 1500
           })
         }
         }) 
@@ -118,11 +117,11 @@ export default function LoginForm() {
               <TextField placeholder='atleast 8 characters' error={Error.password} helperText={ Error.password == "wrong" ? "password must have 8 characters" : Error.password ? "Password is required" : ""} value={Password} onChange={(e)=> setPassword(e.target.value)} fullWidth autoComplete='12345678' type={ShowPassword ? "text" : "password"} size='small' InputProps={{endAdornment: ( <IconButton disableRipple onClick={handleTogglePassword}> {ShowPassword ? <VisibilityOutlined /> : <VisibilityOffOutlined />} </IconButton> ), }} />
             </Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pt: 2 }}>
-                  {loading ? (
-                      <CircularProgress />
-                  ) : (
-                      <Button fullWidth disableElevation disableRipple size='large' style={{ marginRight: "10px", backgroundColor: "#4dafff", marginTop: "15px" }} variant='contained' onClick={handleSubmit}>Login</Button>
-                  )}
+                {loading ? (
+                    <CircularProgress />
+                ) : (
+                    <Button fullWidth disableElevation disableRipple size='large' style={{ marginRight: "10px", backgroundColor: "#4dafff", marginTop: "15px" }} variant='contained' onClick={handleSubmit}>Login</Button>
+                )}
               </Box>
           </Box>
         </Grid>

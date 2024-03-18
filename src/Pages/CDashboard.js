@@ -50,31 +50,34 @@ export default function CDashboard() {
   }, []);
 
   return (
-    <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"93vh"}}>
-      <Grid container rowSpacing={2} paddingTop="35px" justifyContent="space-between" paddingLeft="25px">
-        <Grid sx={{ mb: 2 }} item xs={12}>
-          <h1>Dashboard</h1>
+    <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"100%", paddingTop:"30px", paddingBottom:"30px"}}>
+      <div style={{background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", margin: "20px",paddingBottom:"20px", borderRadius: "20px"}}>
+        <Grid container sx={{}} rowSpacing={2} justifyContent="space-between" paddingX="25px">
+          <Grid sx={{ mb: 2 }} item xs={12}>
+            <h1>Dashboard</h1>
+          </Grid>
+          <>
+            {role === "admin" && (
+              <>
+                {generateCard("Processed PDF", PdfCount.processed_pdf)}
+                {generateCard("Partially Completed Voters", PdfCount.partially_completed_documents)}
+                {generateCard("Completed Voters", PdfCount.completed_documents)}
+                {generateCard("Task Assigned", TaskCounts.total_count)}
+                {generateCard("Task in Progress", TaskCounts.progress)}
+                {generateCard("Tasks completed", TaskCounts.completed)}
+              </>
+            )}
+            {role === "Employee" && (
+              <>
+                {generateCard("Task Assigned", TaskCounts.total_tasks)}
+                {generateCard("Task in Progress", TaskCounts.progress_count)}
+                {generateCard("Tasks completed", TaskCounts.completed_count)}
+              </>
+            )}
+          </>
         </Grid>
-        <>
-          {role === "admin" && (
-            <>
-              {generateCard("Processed PDF", PdfCount.processed_pdf)}
-              {generateCard("Partially Completed Voters", PdfCount.partially_completed_documents)}
-              {generateCard("Completed Voters", PdfCount.completed_documents)}
-              {generateCard("Task Assigned", TaskCounts.total_count)}
-              {generateCard("Task in Progress", TaskCounts.progress)}
-              {generateCard("Tasks completed", TaskCounts.completed)}
-            </>
-          )}
-          {role === "Employee" && (
-            <>
-              {generateCard("Task Assigned", TaskCounts.total_tasks)}
-              {generateCard("Task in Progress", TaskCounts.progress_count)}
-              {generateCard("Tasks completed", TaskCounts.completed_count)}
-            </>
-          )}
-        </>
-      </Grid>
+      </div>
+
     </div>
   );
 }

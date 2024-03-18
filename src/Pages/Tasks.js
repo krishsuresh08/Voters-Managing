@@ -6,6 +6,7 @@ import {DeleteOutlineOutlined, EditOutlined} from '@mui/icons-material';
 import Axios from '../AxiosInstance';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import NoData from '../Components/Card/NoData';
 
 export default function Tasks() {
 
@@ -191,13 +192,19 @@ export default function Tasks() {
     }, []);
 
     return (
-        <div>
-            <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", padding: "20px", marginTop:"35px", borderRadius: "20px"}}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <h1 style={{ fontWeight: "bold", color:"black !Important"  }}>Assigned Tasks</h1>
-                </Box>
-                <StyledDataGrid columns={columns} rows={rows} id='task_id' />
-            </div>
+        <div style={{background: 'linear-gradient(to bottom, #F0F8FF, #89CFF0)', height:"100%", paddingTop:"30px", paddingBottom:"30px" }}>
+            {
+                rows.length>0 ?
+                <div style={{ background: "#FFF", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px", margin: "20px",paddingBottom:"20px",  borderRadius: "20px"}}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <h1 style={{ fontWeight: "bold", color:"black", marginLeft:"10px", paddingTop:"20px"}}>Assigned Tasks</h1>
+                    </Box>
+                    <StyledDataGrid columns={columns} rows={rows} id='task_id' />
+                </div>
+                :
+                <NoData h1="Tasks has not been assigned" h3="Wait for the admin to assign you tasks to see your tasks" />
+            }
+
         </div>
     )
 };
